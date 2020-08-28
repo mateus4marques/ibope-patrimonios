@@ -88,6 +88,15 @@ namespace Patrimonios.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} inválido..
+        /// </summary>
+        public static string X0_INVALIDO {
+            get {
+                return ResourceManager.GetString("X0_INVALIDO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} já existe..
         /// </summary>
         public static string X0_JA_EXISTE {

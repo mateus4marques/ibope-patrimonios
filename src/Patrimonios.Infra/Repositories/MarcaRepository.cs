@@ -1,4 +1,5 @@
-﻿using Patrimonios.Domain.Entities;
+﻿using Microsoft.Extensions.Configuration;
+using Patrimonios.Domain.Entities;
 using Patrimonios.Domain.Repositories;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,12 @@ namespace Patrimonios.Infra.Repositories
 {
     public class MarcaRepository : IMarcaRepository
     {
-        private string connectionString = @"Data Source=MARQUES-PC\SQLEXPRESS;Initial Catalog=Ibope;Integrated Security=True;";
+        public MarcaRepository(IConfiguration configuration)
+        {
+            connectionString = configuration.GetConnectionString("DefaultConnection");
+        }
+
+        private readonly string connectionString = string.Empty;
 
         public void Add(Marca marca)
         {
@@ -55,6 +61,7 @@ namespace Patrimonios.Infra.Repositories
                     Marca marca = Marca.Create();
                     typeof(Marca).GetProperty(nameof(Marca.Id)).SetValue(marca, Guid.Parse(read["id"].ToString()));
                     typeof(Marca).GetProperty(nameof(Marca.Nome)).SetValue(marca, read["nome"].ToString());
+                    marcas.Add(marca);
                 }
                 connection.Close();
             }

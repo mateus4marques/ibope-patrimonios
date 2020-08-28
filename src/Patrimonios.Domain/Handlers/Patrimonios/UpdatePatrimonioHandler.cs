@@ -2,6 +2,7 @@
 using Patrimonios.Domain.Commands;
 using Patrimonios.Domain.Commands.Patrimonios;
 using Patrimonios.Domain.Entities;
+using Patrimonios.Domain.Notifications;
 using Patrimonios.Domain.Repositories;
 using Patrimonios.Domain.Resources;
 using prmToolkit.NotificationPattern;
@@ -17,17 +18,24 @@ namespace Patrimonios.Domain.Handlers.Patrimonios
     {
         public UpdatePatrimonioHandler(
             IPatrimonioRepository patrimonioRepository,
-            IMarcaRepository marcaRepository)
+            IMarcaRepository marcaRepository,
+            IMediator mediator)
         {
             _patrimonioRepository = patrimonioRepository;
             _marcaRepository = marcaRepository;
+            _mediator = mediator;
         }
 
         private readonly IPatrimonioRepository _patrimonioRepository;
         private readonly IMarcaRepository _marcaRepository;
+        private readonly IMediator _mediator;
 
         public async Task<CommandResult<UpdatePatrimonioCommandResult>> Handle(UpdatePatrimonioCommand command, CancellationToken cancellationToken)
         {
+            command.Validate();
+            if (command.IsInvalid())
+                return await Task.FromResult(ErrorCommandResult<UpdatePatrimonioCommandResult>.Create(command.Notifications));
+
             Patrimonio patrimonio = _patrimonioRepository.GetById(command.Id);
 
             if (patrimonio == null)
@@ -45,6 +53,9 @@ namespace Patrimonios.Domain.Handlers.Patrimonios
             patrimonio.Update(command.Nome, (Guid)command.MarcaId, command.Descricao);
 
             _patrimonioRepository.Update(patrimonio);
+
+            if (_mediator != null)
+                await _mediator.Publish(new PatrimonioNotification("updated", patrimonio.Id, patrimonio.Nome, patrimonio.MarcaId, patrimonio.Descricao, patrimonio.NumeroDoTombo), cancellationToken);
 
             return await Task.FromResult(SuccessCommandResult<UpdatePatrimonioCommandResult>.Create((UpdatePatrimonioCommandResult)patrimonio));
         }

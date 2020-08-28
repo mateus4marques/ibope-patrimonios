@@ -2,7 +2,7 @@
 
 namespace Patrimonios.Domain.Commands
 {
-    public abstract class CommandBase : Notifiable, ICommandBase
+    public abstract class CommandBase : Notifiable
     {
         public abstract void Validate();
     }

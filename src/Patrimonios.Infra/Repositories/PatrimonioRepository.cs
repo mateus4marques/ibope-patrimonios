@@ -1,4 +1,5 @@
-﻿using Patrimonios.Domain.Entities;
+﻿using Microsoft.Extensions.Configuration;
+using Patrimonios.Domain.Entities;
 using Patrimonios.Domain.Repositories;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,12 @@ namespace Patrimonios.Infra.Repositories
 {
     public class PatrimonioRepository : IPatrimonioRepository
     {
-        private string connectionString = @"Data Source=MARQUES-PC\SQLEXPRESS;Initial Catalog=Ibope;Integrated Security=True;";
+        public PatrimonioRepository(IConfiguration configuration)
+        {
+            connectionString = configuration.GetConnectionString("DefaultConnection");
+        }
+
+        private readonly string connectionString = string.Empty;
 
         public void Add(Patrimonio patrimonio)
         {
@@ -60,12 +66,13 @@ namespace Patrimonios.Infra.Repositories
 
                 while (read.Read())
                 {
-                    Patrimonio marca = Patrimonio.Create();
-                    typeof(Patrimonio).GetProperty(nameof(Patrimonio.Id)).SetValue(marca, Guid.Parse(read["id"].ToString()));
-                    typeof(Patrimonio).GetProperty(nameof(Patrimonio.Nome)).SetValue(marca, read["nome"].ToString());
-                    typeof(Patrimonio).GetProperty(nameof(Patrimonio.MarcaId)).SetValue(marca, Guid.Parse(read["marca_id"].ToString()));
-                    typeof(Patrimonio).GetProperty(nameof(Patrimonio.Descricao)).SetValue(marca, read["descricao"].ToString());
-                    typeof(Patrimonio).GetProperty(nameof(Patrimonio.NumeroDoTombo)).SetValue(marca, read["numero_do_tombo"].ToString());
+                    Patrimonio patrimonio = Patrimonio.Create();
+                    typeof(Patrimonio).GetProperty(nameof(Patrimonio.Id)).SetValue(patrimonio, Guid.Parse(read["id"].ToString()));
+                    typeof(Patrimonio).GetProperty(nameof(Patrimonio.Nome)).SetValue(patrimonio, read["nome"].ToString());
+                    typeof(Patrimonio).GetProperty(nameof(Patrimonio.MarcaId)).SetValue(patrimonio, Guid.Parse(read["marca_id"].ToString()));
+                    typeof(Patrimonio).GetProperty(nameof(Patrimonio.Descricao)).SetValue(patrimonio, read["descricao"].ToString());
+                    typeof(Patrimonio).GetProperty(nameof(Patrimonio.NumeroDoTombo)).SetValue(patrimonio, read["numero_do_tombo"].ToString());
+                    patrimonios.Add(patrimonio);
                 }
                 connection.Close();
             }
@@ -115,12 +122,13 @@ namespace Patrimonios.Infra.Repositories
 
                 while (read.Read())
                 {
-                    Patrimonio marca = Patrimonio.Create();
-                    typeof(Patrimonio).GetProperty(nameof(Patrimonio.Id)).SetValue(marca, Guid.Parse(read["id"].ToString()));
-                    typeof(Patrimonio).GetProperty(nameof(Patrimonio.Nome)).SetValue(marca, read["nome"].ToString());
-                    typeof(Patrimonio).GetProperty(nameof(Patrimonio.MarcaId)).SetValue(marca, Guid.Parse(read["marca_id"].ToString()));
-                    typeof(Patrimonio).GetProperty(nameof(Patrimonio.Descricao)).SetValue(marca, read["descricao"].ToString());
-                    typeof(Patrimonio).GetProperty(nameof(Patrimonio.NumeroDoTombo)).SetValue(marca, read["numero_do_tombo"].ToString());
+                    Patrimonio patrimonio = Patrimonio.Create();
+                    typeof(Patrimonio).GetProperty(nameof(Patrimonio.Id)).SetValue(patrimonio, Guid.Parse(read["id"].ToString()));
+                    typeof(Patrimonio).GetProperty(nameof(Patrimonio.Nome)).SetValue(patrimonio, read["nome"].ToString());
+                    typeof(Patrimonio).GetProperty(nameof(Patrimonio.MarcaId)).SetValue(patrimonio, Guid.Parse(read["marca_id"].ToString()));
+                    typeof(Patrimonio).GetProperty(nameof(Patrimonio.Descricao)).SetValue(patrimonio, read["descricao"].ToString());
+                    typeof(Patrimonio).GetProperty(nameof(Patrimonio.NumeroDoTombo)).SetValue(patrimonio, read["numero_do_tombo"].ToString());
+                    patrimonios.Add(patrimonio);
                 }
                 connection.Close();
             }

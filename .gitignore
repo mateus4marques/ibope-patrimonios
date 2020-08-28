@@ -7,3 +7,4 @@ src/Patrimonios.Infra/bin
 src/Patrimonios.Tests/obj
 src/Patrimonios.Tests/bin
 /.vs/Patrimonios
+/.vscode

@@ -27,10 +27,16 @@ namespace Patrimonios.Api.Controllers.V1
         [HttpGet]
         public IActionResult Get([FromServices] IMarcaRepository repository)
         {
+            try
+            {
+                var result = repository.GetAll()?.Select(x => (GetAllMarcasQueryResult)x);
 
-            var result = repository.GetAll()?.Select(x => (GetAllMarcasQueryResult)x);
-
-            return StatusCode((int)HttpStatusCode.OK, result);
+                return StatusCode((int)HttpStatusCode.OK, result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.Conflict, ex.Message);
+            }
         }
 
         /// <summary>
@@ -44,9 +50,16 @@ namespace Patrimonios.Api.Controllers.V1
         [HttpGet("{id}")]
         public IActionResult GetById([FromRoute] Guid id, [FromServices] IMarcaRepository repository)
         {
-            var result = (GetMarcaByIdQueryResult)repository.GetById(id);
+            try
+            {
+                var result = (GetMarcaByIdQueryResult)repository.GetById(id);
 
-            return StatusCode((int)HttpStatusCode.OK, result);
+                return StatusCode((int)HttpStatusCode.OK, result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.Conflict, ex.Message);
+            }
         }
 
         /// <summary>
@@ -60,9 +73,16 @@ namespace Patrimonios.Api.Controllers.V1
         [HttpGet("{id}/patrimonios")]
         public IActionResult GetPatrimoniosById([FromRoute] Guid id, [FromServices] IPatrimonioRepository repository)
         {
-            var result = repository.GetAllFromMarcaId(id)?.Select(x => (GetAllPatrimoniosFromMarcaIdQueryResult)x);
+            try
+            {
+                var result = repository.GetAllFromMarcaId(id)?.Select(x => (GetAllPatrimoniosFromMarcaIdQueryResult)x);
 
-            return StatusCode((int)HttpStatusCode.OK, result);
+                return StatusCode((int)HttpStatusCode.OK, result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.Conflict, ex.Message);
+            }
         }
 
         /// <summary>
@@ -77,12 +97,19 @@ namespace Patrimonios.Api.Controllers.V1
         [HttpPost]
         public IActionResult Post([FromBody] CreateMarcaCommand command, [FromServices] IMediator mediator)
         {
-            var result = mediator.Send(command).Result;
+            try
+            {
+                var result = mediator.Send(command).Result;
 
-            if (result is SuccessCommandResult<CreateMarcaCommandResult>)
-                return StatusCode((int)HttpStatusCode.Created, result);
-            else
-                return StatusCode((int)HttpStatusCode.BadRequest, result);
+                if (result is SuccessCommandResult<CreateMarcaCommandResult>)
+                    return StatusCode((int)HttpStatusCode.Created, result);
+                else
+                    return StatusCode((int)HttpStatusCode.BadRequest, result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.Conflict, ex.Message);
+            }
         }
 
         /// <summary>
@@ -98,13 +125,20 @@ namespace Patrimonios.Api.Controllers.V1
         [HttpPut("{id}")]
         public IActionResult Put([FromRoute] Guid id, [FromBody] UpdateMarcaCommand command, [FromServices] IMediator mediator)
         {
-            command.Id = id;
-            var result = mediator.Send(command).Result;
+            try
+            {
+                command.Id = id;
+                var result = mediator.Send(command).Result;
 
-            if (result is SuccessCommandResult<UpdateMarcaCommandResult>)
-                return StatusCode((int)HttpStatusCode.OK, result);
-            else
-                return StatusCode((int)HttpStatusCode.BadRequest, result);
+                if (result is SuccessCommandResult<UpdateMarcaCommandResult>)
+                    return StatusCode((int)HttpStatusCode.OK, result);
+                else
+                    return StatusCode((int)HttpStatusCode.BadRequest, result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.Conflict, ex.Message);
+            }
         }
 
         /// <summary>
@@ -119,14 +153,21 @@ namespace Patrimonios.Api.Controllers.V1
         [HttpDelete("{id}")]
         public IActionResult Put([FromRoute] Guid id, [FromServices] IMediator mediator)
         {
-            DeleteMarcaCommand command = new DeleteMarcaCommand { Id = id };
+            try
+            {
+                DeleteMarcaCommand command = new DeleteMarcaCommand { Id = id };
 
-            var result = mediator.Send(command).Result;
+                var result = mediator.Send(command).Result;
 
-            if (result is SuccessCommandResult<DeleteMarcaCommandResult>)
-                return StatusCode((int)HttpStatusCode.OK, result);
-            else
-                return StatusCode((int)HttpStatusCode.BadRequest, result);
+                if (result is SuccessCommandResult<DeleteMarcaCommandResult>)
+                    return StatusCode((int)HttpStatusCode.OK, result);
+                else
+                    return StatusCode((int)HttpStatusCode.BadRequest, result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.Conflict, ex.Message);
+            }
         }
     }
 }

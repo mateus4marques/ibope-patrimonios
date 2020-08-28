@@ -126,6 +126,9 @@
   <data name="X0_EH_REQUIRIDO" xml:space="preserve">
     <value>{0} é requirido.</value>
   </data>
+  <data name="X0_INVALIDO" xml:space="preserve">
+    <value>{0} inválido.</value>
+  </data>
   <data name="X0_JA_EXISTE" xml:space="preserve">
     <value>{0} já existe.</value>
   </data>

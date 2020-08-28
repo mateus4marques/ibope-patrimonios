@@ -13,13 +13,16 @@ namespace Patrimonios.Domain.Commands.Patrimonios
         public string Nome { get; set; }
 
         [Required]
-        public Guid? MarcaId { get; set; }
+        public Guid MarcaId { get; set; }
 
         public string Descricao { get; set; }
 
         
         public override void Validate()
         {
+            if (MarcaId == Guid.Empty)
+                AddNotification(nameof(MarcaId), Message.X0_INVALIDO.ToFormat(string.Concat("'", MarcaId, "'")));
+
             new AddNotifications<CreatePatrimonioCommand>(this)
                 .IfNullOrInvalidLength(x => x.Nome, 3, 100, Message.X0_EH_OBIGATORIO_E_DEVE_TER_ENTRE_X1_E_X2_CARACTERES.ToFormat(nameof(Nome), 3, 100))
                 .IfNull(MarcaId, Message.X0_EH_REQUIRIDO);

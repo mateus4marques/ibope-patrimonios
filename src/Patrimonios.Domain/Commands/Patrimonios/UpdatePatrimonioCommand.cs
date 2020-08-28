@@ -22,9 +22,14 @@ namespace Patrimonios.Domain.Commands.Patrimonios
 
         public override void Validate()
         {
+            if (Id == Guid.Empty)
+                AddNotification(nameof(Id), Message.X0_INVALIDO.ToFormat(string.Concat("'", Id, "'")));
+
+            if (MarcaId == Guid.Empty)
+                AddNotification(nameof(MarcaId), Message.X0_INVALIDO.ToFormat(string.Concat("'", MarcaId, "'")));
+
             new AddNotifications<UpdatePatrimonioCommand>(this)
-                 .IfNullOrInvalidLength(x => x.Nome, 3, 100, Message.X0_EH_OBIGATORIO_E_DEVE_TER_ENTRE_X1_E_X2_CARACTERES.ToFormat(nameof(Nome), 3, 100))
-                 .IfNull(MarcaId, Message.X0_EH_REQUIRIDO);
+                 .IfNullOrInvalidLength(x => x.Nome, 3, 100, Message.X0_EH_OBIGATORIO_E_DEVE_TER_ENTRE_X1_E_X2_CARACTERES.ToFormat(nameof(Nome), 3, 100));
 
             if (!string.IsNullOrEmpty(Descricao))
                 new AddNotifications<UpdatePatrimonioCommand>(this)

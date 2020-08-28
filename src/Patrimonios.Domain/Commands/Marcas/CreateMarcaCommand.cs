@@ -6,7 +6,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Patrimonios.Domain.Commands.Marcas
 {
-    [Display(Name = "Marca")]
     public class CreateMarcaCommand : CommandBase, IRequest<CommandResult<CreateMarcaCommandResult>>
     {
         [Required]

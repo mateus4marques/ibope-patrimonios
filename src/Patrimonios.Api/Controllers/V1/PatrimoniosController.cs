@@ -26,9 +26,16 @@ namespace Patrimonios.Api.Controllers.V1
         [HttpGet]
         public IActionResult Get([FromServices] IPatrimonioRepository repository)
         {
-            var result = repository.GetAll()?.Select(x => (GetAllPatrimoniosQueryResult)x);
+            try
+            {
+                var result = repository.GetAll()?.Select(x => (GetAllPatrimoniosQueryResult)x);
 
-            return StatusCode((int)HttpStatusCode.OK, result);
+                return StatusCode((int)HttpStatusCode.OK, result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.Conflict, ex.Message);
+            }
         }
 
         /// <summary>
@@ -42,9 +49,16 @@ namespace Patrimonios.Api.Controllers.V1
         [HttpGet("{id}")]
         public IActionResult GetById([FromRoute] Guid id, [FromServices] IPatrimonioRepository repository)
         {
-            var result = (GetPatrimonioByIdQueryResult)repository.GetById(id);
+            try
+            {
+                var result = (GetPatrimonioByIdQueryResult)repository.GetById(id);
 
-            return StatusCode((int)HttpStatusCode.OK, result);
+                return StatusCode((int)HttpStatusCode.OK, result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.Conflict, ex.Message);
+            }
         }
 
         /// <summary>
@@ -59,12 +73,19 @@ namespace Patrimonios.Api.Controllers.V1
         [HttpPost]
         public IActionResult Post([FromBody] CreatePatrimonioCommand command, [FromServices] IMediator mediator)
         {
-            var result = mediator.Send(command).Result;
+            try
+            {
+                var result = mediator.Send(command).Result;
 
-            if (result is SuccessCommandResult<CreatePatrimonioCommandResult>)
-                return StatusCode((int)HttpStatusCode.Created, result);
-            else
-                return StatusCode((int)HttpStatusCode.BadRequest, result);
+                if (result is SuccessCommandResult<CreatePatrimonioCommandResult>)
+                    return StatusCode((int)HttpStatusCode.Created, result);
+                else
+                    return StatusCode((int)HttpStatusCode.BadRequest, result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.Conflict, ex.Message);
+            }
         }
 
         /// <summary>
@@ -80,13 +101,20 @@ namespace Patrimonios.Api.Controllers.V1
         [HttpPut("{id}")]
         public IActionResult Put([FromRoute] Guid id, [FromBody] UpdatePatrimonioCommand command, [FromServices] IMediator mediator)
         {
-            command.Id = id;
-            var result = mediator.Send(command).Result;
+            try
+            {
+                command.Id = id;
+                var result = mediator.Send(command).Result;
 
-            if (result is SuccessCommandResult<UpdatePatrimonioCommandResult>)
-                return StatusCode((int)HttpStatusCode.OK, result);
-            else
-                return StatusCode((int)HttpStatusCode.BadRequest, result);
+                if (result is SuccessCommandResult<UpdatePatrimonioCommandResult>)
+                    return StatusCode((int)HttpStatusCode.OK, result);
+                else
+                    return StatusCode((int)HttpStatusCode.BadRequest, result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.Conflict, ex.Message);
+            }
         }
 
         /// <summary>
@@ -101,14 +129,21 @@ namespace Patrimonios.Api.Controllers.V1
         [HttpDelete("{id}")]
         public IActionResult Put([FromRoute] Guid id, [FromServices] IMediator mediator)
         {
-            DeletePatrimonioCommand command = new DeletePatrimonioCommand { Id = id };
+            try
+            {
+                DeletePatrimonioCommand command = new DeletePatrimonioCommand { Id = id };
 
-            var result = mediator.Send(command).Result;
+                var result = mediator.Send(command).Result;
 
-            if (result is SuccessCommandResult<DeletePatrimonioCommandResult>)
-                return StatusCode((int)HttpStatusCode.OK, result);
-            else
-                return StatusCode((int)HttpStatusCode.BadRequest, result);
+                if (result is SuccessCommandResult<DeletePatrimonioCommandResult>)
+                    return StatusCode((int)HttpStatusCode.OK, result);
+                else
+                    return StatusCode((int)HttpStatusCode.BadRequest, result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.Conflict, ex.Message);
+            }
         }
     }
 }
