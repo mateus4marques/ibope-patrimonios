@@ -1,0 +1,9 @@
+src/Patrimonios.Api/obj
+src/Patrimonios.Api/bin
+src/Patrimonios.Domain/obj
+src/Patrimonios.Domain/bin
+src/Patrimonios.Infra/obj
+src/Patrimonios.Infra/bin
+src/Patrimonios.Tests/obj
+src/Patrimonios.Tests/bin
+/.vs/Patrimonios
