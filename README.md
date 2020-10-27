@@ -1,4 +1,4 @@
-# IBOPE Patrimonios Application
+#  Patrimonios Application
 
 API Rest para gerenciar cadastros de Patrimônios e Marcas. 
 
